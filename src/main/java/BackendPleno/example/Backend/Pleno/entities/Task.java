@@ -1,15 +1,19 @@
 package BackendPleno.example.Backend.Pleno.entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import jakarta.persistence.ElementCollection;
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "task")
@@ -19,22 +23,29 @@ public class Task {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private UUID id;
 	
+	@NotBlank
 	private String name;
+	
+	@NotNull
 	private Integer position;
+	
+	@CreationTimestamp
 	private LocalDateTime createdAt;
 	private LocalDateTime dueDate;
+	
 	private Boolean completed;
 	
-	@ElementCollection
-	private List<String> tags;
+	@NotNull
+	private List<String> tags = new ArrayList<>(); 
 	
-	private String columId;
+	@NotNull
+	private UUID columnId;
 	
 	public Task() {
 	}
 
 	public Task(UUID id, String name, Integer position, LocalDateTime createdAt, LocalDateTime dueDate,
-			Boolean completed, List<String> tags, String columId) {
+			Boolean completed, List<String> tags, UUID columnId) {
 		this.id = id;
 		this.name = name;
 		this.position = position;
@@ -42,7 +53,7 @@ public class Task {
 		this.dueDate = dueDate;
 		this.completed = completed;
 		this.tags = tags;
-		this.columId = columId;
+		this.columnId = columnId;
 	}
 
 	public UUID getId() {
@@ -96,19 +107,17 @@ public class Task {
 	public List<String> getTags() {
 		return tags;
 	}
-
-	public void setTags(List<String> tags) {
-		this.tags = tags;
+	
+	public void addTag(String tag) {
+		tags.add(tag);
 	}
 
-	public String getColumId() {
-		return columId;
+	public UUID getColumnId() {
+		return columnId;
 	}
 
-	public void setColumId(String columId) {
-		this.columId = columId;
+	public void setColumnId(UUID columId) {
+		this.columnId = columId;
 	}
 	
-	
-
 }

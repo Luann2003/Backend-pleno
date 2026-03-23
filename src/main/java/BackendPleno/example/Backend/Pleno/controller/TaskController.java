@@ -17,35 +17,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import BackendPleno.example.Backend.Pleno.dto.ColumnDTO;
-import BackendPleno.example.Backend.Pleno.service.ColumnService;
+import BackendPleno.example.Backend.Pleno.dto.TaskDTO;
+import BackendPleno.example.Backend.Pleno.service.TaskService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/api/v1/column/from")
-public class ColumnController {
+@RequestMapping(value = "/api/v1/task/from")
+public class TaskController {
 	
 	@Autowired
-	private ColumnService service;
+	private TaskService service;
 	
 	@Transactional(readOnly = true)
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<List<ColumnDTO>> findall(@PathVariable UUID id){
-		List<ColumnDTO> result = service.findAllByBoard(id);
+	public ResponseEntity<List<TaskDTO>> findall(@PathVariable UUID id){
+		List<TaskDTO> result = service.findAllByTask(id);
 		return ResponseEntity.ok().body(result);
 	}
 	
 	@PostMapping
-	public ResponseEntity<ColumnDTO> insert(@Valid @RequestBody ColumnDTO dto){
+	public ResponseEntity<TaskDTO> insert(@Valid @RequestBody TaskDTO dto){
 		
-		dto = service.ColumnInsert(dto);
+		dto = service.insertTask(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(dto);
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<ColumnDTO> Update(@Valid @PathVariable UUID id, @RequestBody ColumnDTO dto) {
+	public ResponseEntity<TaskDTO> Update(@Valid @PathVariable UUID id, @RequestBody TaskDTO dto) {
 		dto = service.update(id, dto);
 		return ResponseEntity.ok(dto);
 	}
@@ -56,4 +56,5 @@ public class ColumnController {
 		return ResponseEntity.noContent().build();
 	}
 	
+
 }

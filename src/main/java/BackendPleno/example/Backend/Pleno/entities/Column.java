@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,16 +21,18 @@ public class Column {
 	private String name;
 	private Integer position;
 	
-	private UUID boardId;
+	@ManyToOne
+	@JoinColumn(name = "board_id")
+	private Board boards;
 	
 	public Column() {
 	}
 
-	public Column(UUID id, String name, Integer position, UUID boardId) {
+	public Column(UUID id, String name, Integer position, Board boards) {
 		this.id = id;
 		this.name = name;
 		this.position = position;
-		this.boardId = boardId;
+		this.boards = boards;
 	}
 
 	public UUID getId() {
@@ -55,12 +59,12 @@ public class Column {
 		this.position = position;
 	}
 
-	public UUID getBoardId() {
-		return boardId;
+	public Board getBoards() {
+		return boards;
 	}
 
-	public void setBoardId(UUID boardId) {
-		this.boardId = boardId;
+	public void setBoards(Board boards) {
+		this.boards = boards;
 	}
 	
 }

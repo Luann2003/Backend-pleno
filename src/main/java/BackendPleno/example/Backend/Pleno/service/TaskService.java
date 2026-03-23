@@ -9,62 +9,69 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import BackendPleno.example.Backend.Pleno.dto.ColumnDTO;
-import BackendPleno.example.Backend.Pleno.entities.Board;
-import BackendPleno.example.Backend.Pleno.entities.Column;
-import BackendPleno.example.Backend.Pleno.repository.BoardRepository;
-import BackendPleno.example.Backend.Pleno.repository.ColumnRepository;
+import BackendPleno.example.Backend.Pleno.dto.TaskDTO;
+import BackendPleno.example.Backend.Pleno.entities.Task;
+import BackendPleno.example.Backend.Pleno.repository.TaskRepository;
 import BackendPleno.example.Backend.Pleno.service.exceptions.DatabaseException;
 import BackendPleno.example.Backend.Pleno.service.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class ColumnService {
+public class TaskService {
+	
 	
 	@Autowired
-	private ColumnRepository repository;
-	
-	@Autowired
-	private BoardRepository boardRepository;
+	private TaskRepository repository;
 	
 	@Transactional(readOnly = true)
-	public List<ColumnDTO> findAllByBoard(UUID boardId){
-		List<Column> result = repository.findAllByBoard(boardId);
-		return result.stream().map(x -> new ColumnDTO(x)).toList();
+	public List<TaskDTO> findAllByTask(UUID ColumnId){
+		List<Task> result = repository.findAllByColumn(ColumnId);
+		return result.stream().map(x -> new TaskDTO(x)).toList();
 	}
 	
 	@Transactional
-	public ColumnDTO ColumnInsert(ColumnDTO dto) {
-		Column entity = new Column();	
-		entity.setName(dto.getName());
-		entity.setPosition(dto.getPosition());
-		
-		Board board = boardRepository.getReferenceById(dto.getBoards().getId());
-		entity.setBoards(board);
-		
-		entity = repository.save(entity);
-	
-		return new ColumnDTO(entity);
-	}
-	
-	@Transactional
-	public ColumnDTO update(UUID id, ColumnDTO dto) {
+	public TaskDTO insertTask(TaskDTO dto) {
 
+		Task entity = new Task();
+		entity.setName(dto.getName());
+		entity.setCompleted(dto.getCompleted());
+		entity.setPosition(dto.getPosition());
+		entity.setCreatedAt(dto.getCreatedAt());
+		entity.setDueDate(dto.getDueDate());
+		entity.setColumnId(dto.getColumnId());
+
+		for (String tag : dto.getTags()) {
+			entity.addTag(tag);
+		}
+
+		entity = repository.save(entity);
+
+		return new TaskDTO(entity);
+	}
+	
+	@Transactional
+	public TaskDTO update(UUID id, TaskDTO dto) {
+		
 		try {
-			Column entity = repository.getReferenceById(id);
+			Task entity = repository.getReferenceById(id);
 			entity.setName(dto.getName());
+			entity.setCompleted(dto.getCompleted());
 			entity.setPosition(dto.getPosition());
-			
-			Board board = boardRepository.getReferenceById(dto.getBoards().getId());
-			entity.setBoards(board);		
+			entity.setDueDate(dto.getDueDate());
+			entity.setColumnId(dto.getColumnId());
+
+			entity.getTags().clear();
+			for (String tag : dto.getTags()) {
+				entity.addTag(tag);
+			}
 			
 			entity = repository.save(entity);
-			return new ColumnDTO(entity);
+			return new TaskDTO(entity);
 
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Recurso não encontrado");
 		}
-
+		
 	}
 	
 	@Transactional(propagation = Propagation.SUPPORTS)
@@ -78,5 +85,5 @@ public class ColumnService {
 			throw new DatabaseException("Falha de integridade referencial");
 		}
 	}
-	
+
 }

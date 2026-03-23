@@ -17,23 +17,27 @@ public class ColumnDTO {
 	private Integer position;
 	
 	@NotNull
-	private UUID boardId;
+	private BoardDTO boards;
+
 		
 	public ColumnDTO() {
 	}
 	
-	public ColumnDTO(UUID id, String name, Integer position, UUID boardId) {
+	
+	public ColumnDTO(UUID id, @NotBlank String name, @NotNull Integer position, BoardDTO boards) {
 		this.id = id;
 		this.name = name;
 		this.position = position;
-		this.boardId = boardId;
+		this.boards = boards;
 	}
-	
+
+
 	public ColumnDTO(Column entity) {
 		this.id = entity.getId();
 		this.name = entity.getName();
 		this.position = entity.getPosition();
-		this.boardId = entity.getBoardId();
+		this.boards = new BoardDTO(entity.getBoards());
+	
 	}
 
 	public UUID getId() {
@@ -48,8 +52,8 @@ public class ColumnDTO {
 		return position;
 	}
 
-	public UUID getBoardId() {
-		return boardId;
+	public BoardDTO getBoards() {
+		return boards;
 	}
-	
+
 }

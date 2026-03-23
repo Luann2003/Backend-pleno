@@ -1,11 +1,13 @@
 package BackendPleno.example.Backend.Pleno.entities;
 
+import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,11 +17,11 @@ public class Board {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private UUID id;
-	
 	private String name;
 	
-	
-	
+	@OneToMany(mappedBy = "boards")
+	private List<Column> columns;
+		
 	public Board() {
 	}
 

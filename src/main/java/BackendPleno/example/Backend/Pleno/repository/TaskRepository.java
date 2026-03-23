@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import BackendPleno.example.Backend.Pleno.entities.Column;
+import BackendPleno.example.Backend.Pleno.entities.Task;
 
-public interface ColumnRepository extends JpaRepository<Column, UUID>{
+public interface TaskRepository extends JpaRepository<Task, UUID>{
 	
-	@Query("SELECT c FROM Column c WHERE c.boards.id = :id")
-	List<Column> findAllByBoard(@Param("id") UUID id);
+	@Query("SELECT obj FROM Task obj WHERE obj.columnId = :id")
+    List<Task> findAllByColumn(@Param("id") UUID id);
 
 }
