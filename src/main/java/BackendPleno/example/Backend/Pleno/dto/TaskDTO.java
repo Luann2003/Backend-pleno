@@ -6,19 +6,31 @@ import java.util.List;
 import java.util.UUID;
 
 import BackendPleno.example.Backend.Pleno.entities.Task;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class TaskDTO {
 	
 	private UUID id;
 	
+	@NotBlank
 	private String name;
+	
+	@NotNull
 	private Integer position;
+	
 	private LocalDateTime createdAt;
+	
+	@FutureOrPresent(message = "A data de entrega não pode estar no passado")
+	@NotNull
 	private LocalDateTime dueDate;
+	
 	private Boolean completed;
 	
 	private List<String> tags = new ArrayList<>(); 
 	
+	@NotNull
 	private UUID columnId;
 	
 	public TaskDTO() {
